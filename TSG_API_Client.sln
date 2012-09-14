@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TSG_API_Client", "TSG_API_Client.csproj", "{2C41BD44-2220-4E0D-B3F1-8690A03B668F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2C41BD44-2220-4E0D-B3F1-8690A03B668F}.Debug|x86.ActiveCfg = Debug|x86
+		{2C41BD44-2220-4E0D-B3F1-8690A03B668F}.Debug|x86.Build.0 = Debug|x86
+		{2C41BD44-2220-4E0D-B3F1-8690A03B668F}.Release|x86.ActiveCfg = Release|x86
+		{2C41BD44-2220-4E0D-B3F1-8690A03B668F}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
