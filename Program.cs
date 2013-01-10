@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Xml;
 using System.Net;
+using System.Web.Script.Serialization;
 
 namespace TSG_API_Client
 {
@@ -17,9 +18,10 @@ namespace TSG_API_Client
             try
             {
                 //Settings
-                string apiUrl = "";
-                string apiKey = "";
+                string apiUrl = "https://sandbox.thesecuregateway.com/rest/v1/transactions";
+                string apiKey = "a20effd6dc1d4512888e6b06d870248a";
                 int timeout = 15000; //Milliseconds
+                string lang_type = "json"; //"xml" or "json"
 
                 //Populate Transaction Request Info
                 transaction_request transaction_req = new transaction_request();
@@ -66,26 +68,39 @@ namespace TSG_API_Client
                 sh.phone = "123456789";
                 transaction_req.shipping = sh;
 
-                //Serialize transaction object to XML representation
-                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-                ns.Add("", "");
-                System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(transaction_request));
-                MemoryStream ms = new MemoryStream();
-                Encoding Utf8 = new UTF8Encoding(false);
-                XmlTextWriter xmlTextWriter = new XmlTextWriter(ms, Utf8);
-                xmlTextWriter.Formatting = Formatting.Indented;
-                serializer.Serialize(xmlTextWriter, transaction_req, ns);
-                string xml_request = Utf8.GetString(ms.ToArray());
+                string request = "";
+                if ("xml".Equals(lang_type))
+                {
+                    //Serialize transaction object to XML representation
+                    XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                    ns.Add("", "");
+                    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(transaction_request));
+                    MemoryStream ms = new MemoryStream();
+                    Encoding Utf8 = new UTF8Encoding(false);
+                    XmlTextWriter xmlTextWriter = new XmlTextWriter(ms, Utf8);
+                    xmlTextWriter.Formatting = Formatting.Indented;
+                    serializer.Serialize(xmlTextWriter, transaction_req, ns);
+                    request = Utf8.GetString(ms.ToArray());
+                }
+                else
+                {
+                    //Serialize transaction object to JSON representation
+                    transaction_req.avs_address = null;
+                    transaction_req.avs_zip = null;
+                    JavaScriptSerializer serializer = new JavaScriptSerializer();
+                    string tmp = serializer.Serialize(transaction_req);
+                    request=tmp.Replace("\"avs_address\":null,\"avs_zip\":null,",""); //avoid avs_address and avs_zip fields
+                }
 
                 //Execute request to gateway
                 Console.WriteLine("-----------------------------------------------------");
                 Console.WriteLine("REQUEST TO URL: " + apiUrl);
-                Console.WriteLine("POST DATA: " +Environment.NewLine + xml_request);
+                Console.WriteLine("POST DATA: " +Environment.NewLine + request);
                 HttpWebRequest req = WebRequest.Create(new Uri(apiUrl)) as HttpWebRequest;
                 req.Method = "POST";
-                req.ContentType = "application/xml";
+                req.ContentType = "application/"+lang_type;
                 req.AuthenticationLevel = System.Net.Security.AuthenticationLevel.None;
-                byte[] dataByteLen = UTF8Encoding.UTF8.GetBytes(xml_request);
+                byte[] dataByteLen = UTF8Encoding.UTF8.GetBytes(request);
                 req.ContentLength = dataByteLen.Length;
                 req.Timeout = timeout;
                 Stream post = req.GetRequestStream();
@@ -94,15 +109,30 @@ namespace TSG_API_Client
 
                 HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
                 StreamReader reader = new StreamReader(resp.GetResponseStream());
-                string xml_response = reader.ReadToEnd();
+
+                //handle response
+                string response = reader.ReadToEnd();
 
                 Console.WriteLine("-----------------------------------------------------");
-                Console.WriteLine("RESPONSE DATA: " + Environment.NewLine + xml_response);
-                
-                if (xml_response.Contains("<transaction>"))
+                Console.WriteLine("RESPONSE DATA: " + Environment.NewLine + response);
+
+                if ((response.Contains("<transaction>")) || (response.Contains("\"transaction\"")))
                 {
-                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(transaction_response));
-                    transaction_response transaction_res = (transaction_response)serializer.Deserialize(new StringReader(xml_response));
+                    transaction_response transaction_res;
+                    if ("xml".Equals(lang_type))
+                    {
+                        System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(transaction_response));
+                        transaction_res = (transaction_response)serializer.Deserialize(new StringReader(response));
+                    }
+                    else
+                    {
+                        JavaScriptSerializer serializer = new JavaScriptSerializer();
+                        //remove 'transaction' element from the string response
+                        response = response.Replace("{\"transaction\":", "");
+                        response = response.Remove(response.Length-1);
+                        transaction_res = serializer.Deserialize<transaction_response>(response);
+                    }
+                    
 
                     if (transaction_res.result_code != null && transaction_res.result_code == "0000")
                     {
