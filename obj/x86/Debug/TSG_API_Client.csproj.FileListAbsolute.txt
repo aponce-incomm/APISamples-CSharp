@@ -4,3 +4,9 @@ C:\Documents and Settings\TECRO\Escritorio\APIs JSON\C#\TheSecureGateway-APISamp
 C:\Documents and Settings\TECRO\Escritorio\APIs JSON\C#\TheSecureGateway-APISamples-CSharp-90d38af\obj\x86\Debug\TSG_API_Client.exe
 C:\Documents and Settings\TECRO\Escritorio\APIs JSON\C#\TheSecureGateway-APISamples-CSharp-90d38af\obj\x86\Debug\TSG_API_Client.pdb
 C:\Documents and Settings\TECRO\Escritorio\APIs JSON\C#\TheSecureGateway-APISamples-CSharp-90d38af\bin\Debug\TSG_API_Client.exe.config
+C:\Documents and Settings\TECRO\Escritorio\TSG-800 JSON API Samples\C#\TheSecureGateway-APISamples-CSharp-90d38af\bin\Debug\TSG_API_Client.exe.config
+C:\Documents and Settings\TECRO\Escritorio\TSG-800 JSON API Samples\C#\TheSecureGateway-APISamples-CSharp-90d38af\obj\x86\Debug\TSG_API_Client.exe
+C:\Documents and Settings\TECRO\Escritorio\TSG-800 JSON API Samples\C#\TheSecureGateway-APISamples-CSharp-90d38af\obj\x86\Debug\TSG_API_Client.pdb
+C:\Documents and Settings\TECRO\Escritorio\TSG-800 JSON API Samples\C#\TheSecureGateway-APISamples-CSharp-90d38af\bin\Debug\TSG_API_Client.exe
+C:\Documents and Settings\TECRO\Escritorio\TSG-800 JSON API Samples\C#\TheSecureGateway-APISamples-CSharp-90d38af\bin\Debug\TSG_API_Client.pdb
+C:\Documents and Settings\TECRO\Escritorio\TSG-800 JSON API Samples\C#\TheSecureGateway-APISamples-CSharp-90d38af\obj\x86\Debug\ResolveAssemblyReference.cache

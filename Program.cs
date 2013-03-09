@@ -18,10 +18,10 @@ namespace TSG_API_Client
             try
             {
                 //Settings
-                string apiUrl = "https://sandbox.thesecuregateway.com/rest/v1/transactions";
-                string apiKey = "a20effd6dc1d4512888e6b06d870248a";
+                string apiUrl = "";
+                string apiKey = "";
                 int timeout = 15000; //Milliseconds
-                string lang_type = "json"; //"xml" or "json"
+                string lang_type = ""; //"xml" or "json"
 
                 //Populate Transaction Request Info
                 transaction_request transaction_req = new transaction_request();
@@ -116,7 +116,7 @@ namespace TSG_API_Client
                 Console.WriteLine("-----------------------------------------------------");
                 Console.WriteLine("RESPONSE DATA: " + Environment.NewLine + response);
 
-                if ((response.Contains("<transaction>")) || (response.Contains("\"transaction\"")))
+                if ((response.Contains("<transaction>")) || (response.Contains("\"id\"")))
                 {
                     transaction_response transaction_res;
                     if ("xml".Equals(lang_type))
@@ -126,10 +126,7 @@ namespace TSG_API_Client
                     }
                     else
                     {
-                        JavaScriptSerializer serializer = new JavaScriptSerializer();
-                        //remove 'transaction' element from the string response
-                        response = response.Replace("{\"transaction\":", "");
-                        response = response.Remove(response.Length-1);
+                        JavaScriptSerializer serializer = new JavaScriptSerializer();                  
                         transaction_res = serializer.Deserialize<transaction_response>(response);
                     }
                     
